@@ -1,6 +1,6 @@
 #coding:utf-8
 # this is a simple game  e... or a story teller
-version = '0.13'
+version = '0.14'
 qq_group_num = '296386547'
 initmsg = u'game init... \nversion:'+version+'\ncreate by HIT.SF\nAll copyrights reserved\nWelcome to join us !QQ group:'+qq_group_num
 print initmsg
@@ -24,29 +24,35 @@ def input(msg):
 def output(msg,color=0x0f,suffix='\n'):
 	log(msg,color,suffix)
 
-def startStory():
+def choose_story(storys):
 	output('Please choose story',foreGroundColor.PURPLE)
 	i=0
 	for story in storys:
 		i+=1
 		output(str(i)+' '+story,foreGroundColor.SKYBLUE)
-
-	choose = int(input('Please choose your story'))
-	choosen_story = storys[storys.keys()[choose-1]]
-	output('\nStart story now!\n',foreGroundColor.PINK)
+	output('\nYou have choosen a story!\n',foreGroundColor.PINK)
+	return int(input('Please choose your story'))
+	
+def startStory():
+	choosen_story = storys[storys.keys()[choose_story()-1]]
 	return choosen_story
 
-def getnextchapter(chapter,story):
-	nextchapter = None
-	output(story[chapter][0],foreGroundColor.PURPLE)
-	output('so what will happen?',foreGroundColor.SKYBLUE,'---')
+def choose_chapter(chapters):
 	i=0
-	for nextbranch in story[chapter][1:]:
+	output('so what will happen?',foreGroundColor.SKYBLUE,'---')
+	for nextbranch in chapters:
 		i+=1
 		output(str(i),foreGroundColor.DARKRED,':')
-		output(nextbranch,foreGroundColor.YELLOW,' ')
+		output(nextbranch,foreGroundColor.YELLOW,' ') 
 	print ' '
-	nextchapter = story[chapter][int(input('Please choose it!'))]
+	return int(input('Please choose it!'))
+
+def show_chapter(chapter):
+	output(chapter,foreGroundColor.PURPLE)
+
+def getnextchapter(chapter,story):
+	show_chapter(story[chapter][0])
+	nextchapter = story[chapter][choose_chapter(story[chapter][1:])]
 	return nextchapter
 
 #chapter = 'start'
