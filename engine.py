@@ -109,13 +109,17 @@ def getChapterContent(chapter='start'):
     global choosen_story
     chapter = choosen_story.get(chapter)
     if not chapter:
-        return
+        make_error('could not find the chapter')
+        return 'end'
     return chapter[0]
 
+def resetCurrentChapter():
+    global current_chapter
+    current_chapter = 'start'
 
 def chooseChapter(choose=-1):
     global current_chapter, choosen_story
-    indecies = (choosen_story[current_chapter][1] if len(choosen_story[current_chapter]) > 0 else []) + ['end']
+    indecies = (choosen_story[current_chapter][1] if len(choosen_story[current_chapter]) > 1 else []) + ['end']
     nextchapter = indecies[choose]
     if type(nextchapter) == tuple:
         nextchapter = nextchapter[1]

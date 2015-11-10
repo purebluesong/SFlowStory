@@ -31,14 +31,16 @@ def load():
 		output(save[1], foreGroundColor.PURPLE, ' ')
 		output(save[2], foreGroundColor.YELLOW)
 	i = int(input('choose your save'))
-	engine.load(i-1)
+	return engine.load(i-1)
 
 def inputMsgDispatch(value):
 	if value in ['S', 's']:
 		save()
 		output('Save succeed!',foreGroundColor.YELLOW)
 	elif value in ['L', 'l']:
-		load()
+		chapter = load()
+		show_chapter(engine.getChapterContent(chapter))
+		show_options(engine.getNextChapters(chapter))
 	elif value in ['help', 'H', 'h']:
 		output(helpinfo)
 	else:
@@ -80,6 +82,7 @@ def show_options(options):
 
 def visit_story(story):
 	chapter = startFlag
+	engine.resetCurrentChapter()
 	while(chapter is not endFlag):# loop the story line
 		show_chapter(engine.getChapterContent(chapter))
 		show_options(engine.getNextChapters(chapter))
