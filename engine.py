@@ -4,30 +4,25 @@ version = '0.16'
 qq_group_num = '296386547'
 initmsg = u'Game init... \nVersion:'+version+'\nCreated by HIT.SF\nAll Copyrights Reserved\nWelcome to join us !QQ group:'+qq_group_num
 print initmsg
-import sys,os
+import sys, os
 import time
-def cur_file_dir():
-    #获取脚本路径
-    path = sys.path[0]
-    #判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
-    if os.path.isdir(path):
-        return path
-    elif os.path.isfile(path):
-        return os.path.dirname(path)
-
-sys.path.append(cur_file_dir())
 from catstory_story import storys
 from catstory_story import variables
 import game
 currrent_chapter = 'start'
 save_suffix = '.hit.sf'
 split_symbol = '$$$'
+choosen_story = story.get(story.keys()[0])
 
 def make_error(msg):
     print msg
 
-def startStory():
-    choosen_story = storys[storys.keys()[game.choose_story(storys)-1]]
+def getStorysList():
+    return storys.keys()
+
+def chooseStory(story_name):
+    global choosen_story
+    choosen_story = storys[story_name]
     return choosen_story
 
 def isMethod(obj):
@@ -35,10 +30,11 @@ def isMethod(obj):
 
 def getOptions(chapter, story):
     options = []
-    if type(story[chapter][1]) is not list:
+    secondOption = story[chapter][1]
+    if type(secondOption) is not list:
         make_error('the type of the options is not list')
         return []
-    for option in story[chapter][1]:
+    for option in secondOption:
         if type(option) == tuple:
             options += [option[0]]
         elif type(option) == str or type(option) == unicode:
@@ -51,7 +47,7 @@ def getOptions(chapter, story):
 def save(name='default', timestramp=True):
     global currrent_chapter
     try:
-        f = open(name+save_suffix,'a+')
+        f = open(name + save_suffix, 'a+')
         f.write(currrent_chapter+(split_symbol+str(int(time.mktime(time.localtime())))) if timestramp else '')
         f.close()
     except Exception, e:
@@ -98,8 +94,7 @@ def load(version=-1, name='default'):
         raise
     return currrent_chapter
 
-def getnextchapter(chapter='start',story=storys):
-    global currrent_chapter
+def getNextChapters(chapter='start', story=storys):
     options = []
     if len(story[chapter]) == 2:
         options = getOptions(chapter,story)
@@ -109,12 +104,16 @@ def getnextchapter(chapter='start',story=storys):
         else:
             variables[chapter] = story[chapter][2]
     options += ['end']
-    choose = game.choose_chapter(options)-1
+    return options
+    
+def chooseChapter(chapter='start', story=storys,  ):
+    global currrent_chapter
     indecies = (story[chapter][1] if len(story[chapter]) > 1 else []) + ['end']
     nextchapter = indecies[choose]
     if type(nextchapter) == tuple:
         nextchapter = nextchapter[1]
     currrent_chapter = nextchapter
     return nextchapter
+    choose = game.choose_chapter(options)-1
 
 print 'engine init over'

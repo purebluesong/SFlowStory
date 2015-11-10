@@ -1,3 +1,4 @@
+#coding:utf-8
 import sys,os
 sys.path.append("../")#make import the branch possible
 import engine
@@ -63,10 +64,10 @@ def choose_chapter(chapters):
 	return input('Please choose it!')
 
 def show_chapter(chapter):
-	output(chapter,foreGroundColor.PURPLE)
+	output(chapter, foreGroundColor.PURPLE)
 
 def loop_chapter(chapter):
-	while(chapter is not 'end' && !stop_loop_chapter):# loop the story line
+	while(chapter is not 'end' ):# loop the story line
 		show_chapter(story[chapter][0])
 		chapter = engine.getnextchapter(chapter, story)#^-^
 	
