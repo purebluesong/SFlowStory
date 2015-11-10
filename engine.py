@@ -8,23 +8,22 @@ import sys, os
 import time
 from catstory_story import storys
 from catstory_story import variables
-import game
-currrent_chapter = 'start'
+current_chapter = 'start'
 save_suffix = '.hit.sf'
 split_symbol = '$$$'
-choosen_story = story.get(story.keys()[0])
+choosen_story = storys.get(storys.keys()[0])
 
 def make_error(msg):
     print msg
 
-def getStorysList():
+def getStoryList():
     return storys.keys()
 
 def chooseStory(story_name):
     global choosen_story
     choosen_story = storys[story_name]
     return choosen_story
-
+ 
 def isMethod(obj):
     return obj.hasattr(obj, '__call__')
 
@@ -45,10 +44,10 @@ def getOptions(chapter, story):
     return options
 
 def save(name='default', timestramp=True):
-    global currrent_chapter
+    global current_chapter
     try:
         f = open(name + save_suffix, 'a+')
-        f.write(currrent_chapter+(split_symbol+str(int(time.mktime(time.localtime())))) if timestramp else '')
+        f.write(current_chapter+(split_symbol+str(int(time.mktime(time.localtime())))) if timestramp else '')
         f.close()
     except Exception, e:
         raise
@@ -80,40 +79,47 @@ def get_saves(name='default'):
         return saves
 
 def load(version=-1, name='default'):
-    global currrent_chapter
+    global current_chapter
     try:
         f = open(name+save_suffix, 'r')
         records = str(f.read()).split('\n')
-        if version==-1 || version>len(records):
-            currrent_chapter = (records[-1]).split('$$$')[0]
-        if len(records)>version:
-            currrent_chapter = (records[version]).split('$$$')[0]
+        if version == -1 or version > len(records):
+            current_chapter = (records[-1]).split('$$$')[0]
+        if len(records) > version:
+            current_chapter = (records[version]).split('$$$')[0]
         f.close()
     except Exception, e:
         make_error('error:load-Maybe file does not exist')
         raise
-    return currrent_chapter
+    return current_chapter
 
-def getNextChapters(chapter='start', story=storys):
+def getNextChapters(chapter='start'):
     options = []
-    if len(story[chapter]) == 2:
-        options = getOptions(chapter,story)
-    if len(story[chapter]) == 3:
-        if isMethod(story[chapter][2]):
-            story[chapter][2]()
+    if len(choosen_story[chapter]) == 2:
+        options = getOptions(chapter, choosen_story)
+    if len(choosen_story[chapter]) == 3:
+        if isMethod(choosen_story[chapter][2]):
+            choosen_story[chapter][2]()
         else:
-            variables[chapter] = story[chapter][2]
+            variables[chapter] = choosen_story[chapter][2]
     options += ['end']
     return options
-    
-def chooseChapter(chapter='start', story=storys,  ):
-    global currrent_chapter
-    indecies = (story[chapter][1] if len(story[chapter]) > 1 else []) + ['end']
+
+def getChapterContent(chapter='start'):
+    global choosen_story
+    chapter = choosen_story.get(chapter)
+    if not chapter:
+        return
+    return chapter[0]
+
+
+def chooseChapter(choose=-1):
+    global current_chapter, choosen_story
+    indecies = (choosen_story[current_chapter][1] if len(choosen_story[current_chapter]) > 0 else []) + ['end']
     nextchapter = indecies[choose]
     if type(nextchapter) == tuple:
         nextchapter = nextchapter[1]
-    currrent_chapter = nextchapter
-    return nextchapter
-    choose = game.choose_chapter(options)-1
+    current_chapter = nextchapter
+    return current_chapter
 
 print 'engine init over'
