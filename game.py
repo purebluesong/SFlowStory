@@ -52,8 +52,10 @@ def choose_story(storys):
 	for story in storys:
 		i += 1
 		output(str(i)+story, foreGroundColor.SKYBLUE)
-	story_index = input('Please choose your story:')
-	story_index = stools.intelligence_int(story_index, 1, len(storys))
+	story_index = inputMsgDispatch(input('Please choose your story:'))
+	while not story_index:
+		story_index = inputMsgDispatch(input('Please choose your story:'))
+	story_index = 0 if story_index < 0 else story_index % len(storys)
 	if not story_index:
 		return
 	print 'OK Come on!'

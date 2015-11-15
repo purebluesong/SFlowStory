@@ -1,6 +1,6 @@
 #coding:utf-8
 # this is a simple game  e... or a story teller
-version = '0.16'
+version = '0.20'
 qq_group_num = '296386547'
 initmsg = u'Game init... \nVersion:'+version+'\nCreated by HIT.SF\nAll Copyrights Reserved\nWelcome to join us !QQ group:'+qq_group_num
 print initmsg
