@@ -4,8 +4,7 @@ version = '0.20'
 qq_group_num = '296386547'
 initmsg = u'Game init... \nVersion:'+version+'\nCreated by HIT.SF\nAll Copyrights Reserved\nWelcome to join us !QQ group:'+qq_group_num
 print initmsg
-import sys, os
-import time
+import sys, os, stools
 from catstory_story import storys
 from catstory_story import variables
 current_chapter = 'start'
@@ -47,13 +46,12 @@ def save(name='default', timestramp=True):
     global current_chapter
     try:
         f = open(name + save_suffix, 'a+')
-        f.write(current_chapter+(split_symbol+str(int(time.mktime(time.localtime())))) if timestramp else '')
+        f.write(current_chapter+(split_symbol+str(stools.getNowTime_Int())) if timestramp else '')
         f.close()
     except Exception, e:
-        raise
-        return True
-    else:
         return False
+    else:
+        return True
 
 def get_saves(name='default'):
     saves = []
@@ -66,14 +64,13 @@ def get_saves(name='default'):
             record = record.split(split_symbol)
             if len(record) > 1:
                 timestramp = int(record[1])
-                record_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(timestramp))
+                record_time = stools.getNowTime_Str(timestramp)
                 saves.append((i, record[0], record_time))
             else:
                 saves.append((i, record))
             i += 1
     except Exception, e:
         make_error('error:Maybe the file does not exit')
-        raise e
         return saves
     else:
         return saves
@@ -90,7 +87,6 @@ def load(version=-1, name='default'):
         f.close()
     except Exception, e:
         make_error('error:load-Maybe file does not exist')
-        raise
     return current_chapter
 
 def getNextChapters(chapter='start'):
